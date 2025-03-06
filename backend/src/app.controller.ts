@@ -9,4 +9,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('test')
+  getTestMessage() {
+    return { message: 'Backend is connected to the frontend!' };
+  }
 }
