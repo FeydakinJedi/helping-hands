@@ -9,7 +9,14 @@ import { MessagesModule } from './messages/messages.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), PrismaModule, UsersModule, HelpRequestsModule, MessagesModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot(), 
+    PrismaModule, 
+    UsersModule, 
+    HelpRequestsModule, 
+    MessagesModule, 
+    AuthModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
