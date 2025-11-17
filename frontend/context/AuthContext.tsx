@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import api from "../utils/api";
+import api from "@/utils/api";
 
 interface User {
   id: number;
@@ -40,9 +40,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem("token", access_token);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Handle Axios errors
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      throw new Error(axiosError.response?.data?.message || 'Login failed');
+    }
+  };
+
+  const signup = async (name: string, email: string, password: string) => {
+    try {
+      const response = await api.post("/auth/signup", {name, email, password });
+      const { access_token, user } = response.data;
+
+      localStorage.setItem("token", access_token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Handle Axios errors
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      throw new Error(axiosError.response?.data?.message || ' Signup failed');
     }
   };
 
