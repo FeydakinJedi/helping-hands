@@ -10,8 +10,8 @@ export class AuthController {
     return this.authService.login(await this.authService.validateUser(body.email, body.password));
   }
 
-  @Post('register')
-  async register(@Body() body: { name: string; email: string; password: string }) {
-    return this.authService.register(body.name, body.email, body.password);
+  @Post('signup')
+  async signup(@Body() body: { name: string; email: string; password: string }) {
+    return this.authService.signup(body.name, body.email, body.password);
   }
 }

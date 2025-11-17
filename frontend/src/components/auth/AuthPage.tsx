@@ -8,12 +8,12 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="w-full max-w-sm">
         {isLogin ? <LoginForm /> : <SignupForm />}
         <p className="text-center mt-4">
           {isLogin ? "Don't have an account?" : "Already have an account?"}
-          <button onClick={() => setIsLogin(!isLogin)} className="text-blue-500 ml-1">
+          <button onClick={() => setIsLogin(!isLogin)} className="bg-highlight hover:bg-deep text-background">
             {isLogin ? "Sign up" : "Log in"}
           </button>
         </p>

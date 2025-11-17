@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -16,15 +16,16 @@ export default function LoginForm() {
     try {
       await login(email, password);
       router.push("/dashboard"); // Redirect to dashboard after login
-    } catch (err) {
-      setError("Invalid email or password");
+    } catch (error) {
+      setError("Invalid email or password. ");
+      console.log(error);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-sm mx-auto p-6 shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      {error && <p className="text-center">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="email"
@@ -42,7 +43,7 @@ export default function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+        <button type="submit" className="w-full py-2 rounded">
           Login
         </button>
       </form>

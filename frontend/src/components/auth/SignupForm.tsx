@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
@@ -17,15 +17,16 @@ export default function SignupForm() {
     try {
       await signup(name, email, password);
       router.push("/dashboard"); // Redirect after signup
-    } catch (err) {
+    } catch (error) {
       setError("Signup failed. Try again.");
+      console.log(error);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-sm mx-auto p-6 shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      {error && <p className="text-center">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -51,7 +52,7 @@ export default function SignupForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded">
+        <button type="submit" className="w-full py-2 rounded bg-highlight hover:bg-deep text-background">
           Sign Up
         </button>
       </form>

@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fefadc;  /* Warm Cream */
+  --foreground: #5f463a;  /* Deep Brown (Your 'text' color) */
+  --primary: #fc5f2b;
+  --secondary: #8cc63f;
+  --highlight: #d01e32;
+  --accent: #f4f300;
+  --muted: #7b848d;
+  --border: #a6a69a;
+  --shadow: #b3ae97;
+  --soft: #efe9dc;
+  --contrast: #d1b699;
+  --deep: #793531;
+  --warm: #7d604c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #5f463a;
+    --foreground: #fefadc;
+  }
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}

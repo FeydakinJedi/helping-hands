@@ -22,7 +22,7 @@ export class AuthService {
     return { access_token: this.jwtService.sign(payload) };
   }
 
-  async register(name: string, email: string, password: string) {
+  async signup(name: string, email: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.prisma.user.create({
       data: { name, email, password: hashedPassword, skills: [], tools: [] },
