@@ -48,8 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Signup failed');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Handle Axios errors
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      throw new Error(axiosError.response?.data?.message || 'Signup failed');
     }
   };
 
@@ -60,8 +65,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
       }
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Handle Axios errors
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      throw new Error(axiosError.response?.data?.message || 'Login failed');
     }
   };
 
