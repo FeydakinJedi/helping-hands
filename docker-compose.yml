@@ -1,0 +1,30 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/helpinghands
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      API_URL: http://backend:3001  # no NEXT_PUBLIC_ prefix = server-side only
+
+volumes:
+  mongo_data:
