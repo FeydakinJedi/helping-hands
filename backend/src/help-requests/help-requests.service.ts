@@ -1,22 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { HelpRequest } from '@prisma/client';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { HelpRequest, HelpRequestDocument } from './schemas/help-request.schema';
 
 @Injectable()
 export class HelpRequestsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectModel(HelpRequest.name) private helpRequestModel: Model<HelpRequestDocument>,
+  ) {}
 
-  async createHelpRequest(title: string, details: string, skills: string[], tools: string[], userId: string): Promise<HelpRequest> {
-    return this.prisma.helpRequest.create({
-      data: { title, details, skills, tools, userId },
+  async createHelpRequest(
+    title: string,
+    description: string,
+    skills: string[],
+    supplies: string[],
+    userId: string,
+  ): Promise<HelpRequestDocument> {
+    const request = new this.helpRequestModel({
+      title,
+      description,
+      skills,
+      supplies,
+      author: userId,
     });
+    return request.save();
   }
 
-  async getHelpRequests(): Promise<HelpRequest[]> {
-    return this.prisma.helpRequest.findMany();
+  async getHelpRequests(): Promise<HelpRequestDocument[]> {
+    return this.helpRequestModel.find().populate('author', 'name email').exec();
   }
 
-  async getHelpRequestById(id: string): Promise<HelpRequest | null> {
-    return this.prisma.helpRequest.findUnique({ where: { id } });
+  async getHelpRequestById(id: string): Promise<HelpRequestDocument | null> {
+    return this.helpRequestModel.findById(id).populate('author', 'name email').exec();
+  }
+
+  async searchBySkillsOrSupplies(skills?: string[], supplies?: string[]): Promise<HelpRequestDocument[]> {
+    const query: any = {};
+    if (skills?.length) query.skills = { $in: skills };
+    if (supplies?.length) query.supplies = { $in: supplies };
+    return this.helpRequestModel.find(query).populate('author', 'name email').exec();
   }
 }

@@ -1,21 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { Message } from '@prisma/client';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Message, MessageDocument } from './schemas/message.schema';
 
 @Injectable()
 export class MessagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@InjectModel(Message.name) private messageModel: Model<MessageDocument>) {}
 
-  async sendMessage(senderId: string, receiverId: string, content: string): Promise<Message> {
-    return this.prisma.message.create({
-      data: { senderId, receiverId, content },
-    });
+  async sendMessage(
+    senderId: string,
+    recipientId: string,
+    body: string,
+  ): Promise<MessageDocument> {
+    const message = new this.messageModel({ sender: senderId, recipient: recipientId, body });
+    return message.save();
   }
 
-  async getMessagesForUser(userId: string): Promise<Message[]> {
-    return this.prisma.message.findMany({
-      where: { OR: [{ senderId: userId }, { receiverId: userId }] },
-      orderBy: { createdAt: 'desc' },
-    });
+  async getMessagesForUser(userId: string): Promise<MessageDocument[]> {
+    return this.messageModel
+      .find({ $or: [{ sender: userId }, { recipient: userId }] })
+      .populate('sender', 'name email')
+      .populate('recipient', 'name email')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
+
+  async getConversation(userAId: string, userBId: string): Promise<MessageDocument[]> {
+    return this.messageModel
+      .find({
+        $or: [
+          { sender: userAId, recipient: userBId },
+          { sender: userBId, recipient: userAId },
+        ],
+      })
+      .populate('sender', 'name email')
+      .populate('recipient', 'name email')
+      .sort({ createdAt: 1 })
+      .exec();
   }
 }
