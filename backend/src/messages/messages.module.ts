@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { MessagesService } from './messages.service';
 import { MessagesController } from './messages.controller';
-import { PrismaModule } from '../prisma/prisma.module';
+import { Message, MessageSchema } from './schemas/message.schema';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }])],
   providers: [MessagesService],
-  controllers: [MessagesController]
+  controllers: [MessagesController],
 })
 export class MessagesModule {}

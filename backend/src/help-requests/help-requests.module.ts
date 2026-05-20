@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { HelpRequestsService } from './help-requests.service';
 import { HelpRequestsController } from './help-requests.controller';
-import { PrismaModule } from '../prisma/prisma.module';
+import { HelpRequest, HelpRequestSchema } from './schemas/help-request.schema';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [MongooseModule.forFeature([{ name: HelpRequest.name, schema: HelpRequestSchema }])],
   providers: [HelpRequestsService],
-  controllers: [HelpRequestsController]
+  controllers: [HelpRequestsController],
 })
 export class HelpRequestsModule {}
